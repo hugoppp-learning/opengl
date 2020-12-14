@@ -29,6 +29,8 @@ public:
     void Unbind();
 
     static void checkCompileErrors(unsigned int shader, const std::string &type);
+
+    void SetUniformMatrix4v(const std::string &name, const float *value);
 };
 
 #endif //OPENGLTEST_SHADER_H

@@ -25,7 +25,7 @@ set(SOURCE_FILES
         src/Renderer/Renderer.cpp
         src/Renderer/Renderer.h
         src/Renderer/Texture.cpp src/Renderer/Texture.h
-        src/Renderer/GLDebugCallBack.h)
+        src/Renderer/GLDebugCallBack.h src/Renderer/WindowInitilizer.cpp src/Renderer/WindowInitilizer.h src/Renderer/VertexBufferLayout.cpp)
 
 add_executable(openglTEST ${SOURCE_FILES})
 target_link_libraries(openglTEST
@@ -33,6 +33,5 @@ target_link_libraries(openglTEST
         glm)
 
 target_include_directories(openglTEST PRIVATE ${PROJECT_SOURCE_DIR}/lib)
-#target_include_directories(openglTEST PRIVATE ${PROJECT_SOURCE_DIR}/includes)
 target_include_directories(openglTEST PRIVATE ${PROJECT_SOURCE_DIR}/src)
 

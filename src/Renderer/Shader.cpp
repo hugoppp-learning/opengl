@@ -62,6 +62,10 @@ void Shader::Bind() const {
     glUseProgram(renderer_id);
 }
 
+void Shader::SetUniformMatrix4v(const std::string &name, const float *value) {
+    glUniformMatrix4fv(GetUniformLocation(name),1, GL_FALSE, value);
+}
+
 void Shader::SetUniform(const std::string &name, bool value) {
     glUniform1i(GetUniformLocation(name), (int) value);
 }

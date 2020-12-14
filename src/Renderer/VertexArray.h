@@ -29,7 +29,7 @@ public:
             glEnableVertexAttribArray(i);
             glVertexAttribPointer(
                 i, attribute.count, attribute.type, attribute.normalized, layout.GetStride(), (void *) offset);
-            offset += attribute.count * VertexAttributes::getSizeOfGLType(attribute.type);
+            offset += attribute.GetSize();
         }
     }
 

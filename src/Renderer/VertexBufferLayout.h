@@ -7,6 +7,16 @@
 
 class VertexBufferLayout {
 private:
+    struct VertexAttributes {
+    public:
+        unsigned int type;
+        unsigned int count;
+        GLboolean normalized;
+
+        unsigned int GetSize() const{
+            return VertexBufferLayout::getSizeOfGLType(type) * count;
+        }
+    };
     std::vector<VertexAttributes> attributes;
     unsigned int stride;
 
@@ -22,12 +32,10 @@ public:
         return stride;
     }
 
-    void Push(GLuint attribType, unsigned int count) {
-        attributes.push_back({attribType, count, GL_FALSE});
-        stride += VertexAttributes::getSizeOfGLType(attribType) * count;
-    }
+    template<typename T>
+    void Push(unsigned int count);
 
-
+    static unsigned int getSizeOfGLType(unsigned int type);
 };
 
 
