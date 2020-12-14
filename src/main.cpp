@@ -56,17 +56,30 @@ int main() {
     Texture texture("../res/holo.png");
 
     Renderer renderer;
+    glm::mat4 projection =
+        glm::perspective(glm::radians(45.0f),
+                         800.0f / 600.0f,
+                         0.1f,
+                         100.0f);
     while (!glfwWindowShouldClose(window)) {
         processInput(window);
-
+        renderer.Clear();
         shader.Bind();
-        glm::mat4 trans = glm::mat4(1.0f);
-        trans = glm::rotate(trans, (float) glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-        trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
-        shader.SetUniformMatrix4v("transform", glm::value_ptr(trans));
+
+        glm::mat4 view =
+            glm::translate(glm::mat4(1.0f),
+                           glm::vec3(0.0f, 0.0f, -4.0f));
+
+            glm::mat4 model =
+                    glm::rotate(glm::mat4(1.0f),
+                                glm::radians(-55.0f),
+                                glm::vec3(1.0f, 0.0f, 0.0f));
+
+            auto mvp = projection * view * model;
+            shader.SetUniformMatrix4v("mvp", glm::value_ptr(mvp));
+            renderer.Draw(va, ib, shader);
         shader.Unbind();
 
-        renderer.Draw(va, ib, shader);
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -81,4 +94,12 @@ void processInput(GLFWwindow *window) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+}
+
+void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
+    glm::mat4 projection =
+        glm::perspective(glm::radians(45.0f),
+                         (float)width / (float)height,
+                         0.1f,
+                         100.0f);
 }
