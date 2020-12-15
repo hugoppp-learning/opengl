@@ -20,8 +20,6 @@ private:
 
     static void printError(GLenum source, GLenum type, unsigned int id, GLenum severity, const char *message);
 
-    void initImgui();
-
     void initImGui() const;
 
     static void initGL() ;

@@ -5,14 +5,14 @@
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <Renderer/Texture.h>
+#include <renderer/Texture.h>
 
-#include "Renderer/Shader.h"
-#include "Renderer/VertexBuffer.h"
-#include "Renderer/IndexBuffer.h"
-#include "Renderer/VertexBufferLayout.h"
-#include "Renderer/VertexArray.h"
-#include "Renderer/Renderer.h"
+#include "renderer/Shader.h"
+#include "renderer/VertexBuffer.h"
+#include "renderer/IndexBuffer.h"
+#include "renderer/VertexBufferLayout.h"
+#include "renderer/VertexArray.h"
+#include "renderer/Renderer.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -20,10 +20,12 @@
 #include <imgui/imgui_impl_opengl3.h>
 #include <imgui/imgui_impl_glfw.h>
 #include <renderer/Camera.h>
-#include "Renderer/Window.h"
+#include "renderer/Window.h"
 //#include <imgui/imgui.h>
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
+
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 
 void drawImGui(GLFWwindow *window);
 
@@ -68,6 +70,7 @@ int main() {
         3, 2, 1,
     };
 
+    glfwSetCursorPosCallback(window.GetGLFWwindow(), mouse_callback);
     Shader shader = Shader("../res/1.vert", "../res/1.frag");
     shader.Bind();
     VertexBuffer vb(vertices, sizeof(vertices));
@@ -95,31 +98,26 @@ int main() {
                          100.0f);
 
 
-    glm::vec3 transl (0.45f, 0.55f, 0.60f);
-    glm::vec4 clear_color (0.45f, 0.55f, 0.60f, 1.00f);
+    glm::vec3 transl(0.45f, 0.55f, 0.60f);
+    glm::vec4 clear_color(0.45f, 0.55f, 0.60f, 1.00f);
     // Main loop
     while (!glfwWindowShouldClose(window.GetGLFWwindow())) {
         processInput(window.GetGLFWwindow());
         renderer.Clear();
         shader.Bind();
 
-        glm::mat4 view =
-//            glm::translate(glm::mat4(1.0f),
-//                          glm::vec3(0.0f, 0.0f, -4.0f));
+        glm::mat4 view = camera.GetViewMatrix();
 
-            camera.GetViewMatrix();
-//            var.length();
+        glm::mat4 model =
+            glm::translate(
+                glm::rotate(glm::mat4(1.0f),
+                            glm::radians(-55.0f),
+                            glm::vec3(1.0f, 0.0f, 0.0f)),
+                transl);
 
-            glm::mat4 model =
-                glm::translate(
-                    glm::rotate(glm::mat4(1.0f),
-                                glm::radians(-55.0f),
-                                glm::vec3(1.0f, 0.0f, 0.0f)),
-                                transl);
-
-            auto mvp = projection * view/* * model*/;
-            shader.SetUniformMatrix4v("mvp", glm::value_ptr(mvp));
-            renderer.Draw(va, ib, shader);
+        auto mvp = projection * view/* * model*/;
+        shader.SetUniformMatrix4v("mvp", glm::value_ptr(mvp));
+        renderer.Draw(va, ib, shader);
         shader.Unbind();
 
         {
@@ -132,7 +130,7 @@ int main() {
 
             ImGui::Begin("Hello OpenGL");
             ImGui::Text("This is some useful text.");
-            ImGui::ColorEdit3("clear color", (float*)&clear_color);
+            ImGui::ColorEdit3("clear color", (float *) &clear_color);
 //            ImGui::SliderFloat3("translation", (float*)&transl, -10, 10, "%.2f",0);
 
             if (ImGui::Button("Button"))
@@ -140,7 +138,8 @@ int main() {
             ImGui::SameLine();
             ImGui::Text("counter = %d", counter);
 
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate,
+                        ImGui::GetIO().Framerate);
             ImGui::End();
         }
 
@@ -159,6 +158,29 @@ int main() {
     return 0;
 }
 
+void mouse_callback(GLFWwindow *window, double xpos, double ypos){
+    static double lastX = .0f;
+    static double lastY = .0f;
+    static bool firstMouse = true;
+    static double pitch = .0;
+    static double yaw = -90.0;
+    if (firstMouse)
+    {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+    double xoffset = xpos - lastX;
+    double yoffset = lastY - ypos;
+    lastX = xpos;
+    lastY = ypos;
+
+
+    pitch += xoffset;
+    yaw += yoffset;
+    camera.Rotate(xoffset, yoffset);
+}
+
 void processInput(GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
@@ -175,13 +197,24 @@ void processInput(GLFWwindow *window) {
         camera.Left();
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.Right();
+    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+        camera.Up();
+    if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
+        camera.Down();
 }
+
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCUnusedGlobalDeclarationInspection"
+
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
     glm::mat4 projection =
         glm::perspective(glm::radians(45.0f),
-                         (float)width / (float)height,
+                         (float) width / (float) height,
                          0.1f,
                          100.0f);
 }
+
+
+#pragma clang diagnostic pop
 

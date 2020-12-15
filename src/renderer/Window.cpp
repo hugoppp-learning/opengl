@@ -26,6 +26,7 @@ Window::Window() {
         return;
     }
     glfwMakeContextCurrent(glfwWindow);
+    glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 
     if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
