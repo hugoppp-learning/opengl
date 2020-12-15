@@ -70,7 +70,7 @@ void Window::initImGui() const {// ---- IM GUI
 //ImGui::StyleColorsClassic();
 
     const char *glsl_version = "#version 130";
-// Setup Platform/Renderer backends
+// Setup Platform/renderer backends
     ImGui_ImplGlfw_InitForOpenGL(glfwWindow, true);
     ImGui_ImplOpenGL3_Init(glsl_version);
 }

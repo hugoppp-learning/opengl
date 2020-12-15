@@ -29,18 +29,17 @@ set(SOURCE_FILES
         lib/stb_image/stb_image.h
         lib/glad/glad.c
         src/main.cpp
-        src/Renderer/Shader.cpp
-        src/Renderer/Shader.h
-        src/Renderer/VertexArray.h
-        src/Renderer/VertexBufferLayout.h
-        src/Renderer/VertexAttributes.h
-        src/Renderer/VertexBuffer.h
-        src/Renderer/IndexBuffer.h
+        src/renderer/Shader.cpp
+        src/renderer/Shader.h
+        src/renderer/VertexArray.h
+        src/renderer/VertexBufferLayout.h
+        src/renderer/VertexBuffer.h
+        src/renderer/IndexBuffer.h
         src/myAssert.h
-        src/Renderer/Renderer.cpp
-        src/Renderer/Renderer.h
-        src/Renderer/Texture.cpp src/Renderer/Texture.h
-        src/Renderer/GLDebugCallBack.h src/Renderer/Window.cpp src/Renderer/Window.h src/Renderer/VertexBufferLayout.cpp)
+        src/renderer/Renderer.cpp
+        src/renderer/Renderer.h
+        src/renderer/Texture.cpp src/renderer/Texture.h
+        src/renderer/GLDebugCallBack.h src/renderer/Window.cpp src/renderer/Window.h src/renderer/VertexBufferLayout.cpp src/renderer/Camera.cpp src/renderer/Camera.h)
 
 
 add_executable(openglTEST ${SOURCE_FILES} ${IMGUI_SOURCE_FILES})

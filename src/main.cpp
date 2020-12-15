@@ -19,6 +19,7 @@
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_opengl3.h>
 #include <imgui/imgui_impl_glfw.h>
+#include <renderer/Camera.h>
 #include "Renderer/Window.h"
 //#include <imgui/imgui.h>
 
@@ -30,8 +31,8 @@ void processInput(GLFWwindow *window);
 
 bool show_demo_window = true;
 bool show_another_window = false;
-ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
+Camera camera;
 
 
 int main() {
@@ -94,6 +95,8 @@ int main() {
                          100.0f);
 
 
+    glm::vec3 transl (0.45f, 0.55f, 0.60f);
+    glm::vec4 clear_color (0.45f, 0.55f, 0.60f, 1.00f);
     // Main loop
     while (!glfwWindowShouldClose(window.GetGLFWwindow())) {
         processInput(window.GetGLFWwindow());
@@ -101,69 +104,43 @@ int main() {
         shader.Bind();
 
         glm::mat4 view =
-            glm::translate(glm::mat4(1.0f),
-                           glm::vec3(0.0f, 0.0f, -4.0f));
+//            glm::translate(glm::mat4(1.0f),
+//                          glm::vec3(0.0f, 0.0f, -4.0f));
+
+            camera.GetViewMatrix();
+//            var.length();
 
             glm::mat4 model =
+                glm::translate(
                     glm::rotate(glm::mat4(1.0f),
                                 glm::radians(-55.0f),
-                                glm::vec3(1.0f, 0.0f, 0.0f));
+                                glm::vec3(1.0f, 0.0f, 0.0f)),
+                                transl);
 
-            auto mvp = projection * view * model;
+            auto mvp = projection * view/* * model*/;
             shader.SetUniformMatrix4v("mvp", glm::value_ptr(mvp));
             renderer.Draw(va, ib, shader);
         shader.Unbind();
 
-
-
-
-
-        // Poll and handle events (inputs, window resize, etc.)
-        // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
-        // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application.
-        // - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application.
-        // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
-        glfwPollEvents();
-
-        // Start the Dear ImGui frame
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-
-        // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-        if (show_demo_window)
-            ImGui::ShowDemoWindow(&show_demo_window);
-
-        // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
         {
+            glfwPollEvents();
+            ImGui_ImplOpenGL3_NewFrame();
+            ImGui_ImplGlfw_NewFrame();
+            ImGui::NewFrame();
             static float f = 0.0f;
             static int counter = 0;
 
-            ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+            ImGui::Begin("Hello OpenGL");
+            ImGui::Text("This is some useful text.");
+            ImGui::ColorEdit3("clear color", (float*)&clear_color);
+//            ImGui::SliderFloat3("translation", (float*)&transl, -10, 10, "%.2f",0);
 
-            ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-            ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-            ImGui::Checkbox("Another Window", &show_another_window);
-
-            ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-            ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-            if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+            if (ImGui::Button("Button"))
                 counter++;
             ImGui::SameLine();
             ImGui::Text("counter = %d", counter);
 
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-            ImGui::End();
-        }
-
-        // 3. Show another simple window.
-        if (show_another_window)
-        {
-            ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-            ImGui::Text("Hello from another window!");
-            if (ImGui::Button("Close Me"))
-                show_another_window = false;
             ImGui::End();
         }
 
@@ -173,11 +150,7 @@ int main() {
         glfwGetFramebufferSize(window.GetGLFWwindow(), &display_w, &display_h);
         glViewport(0, 0, display_w, display_h);
         glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-//        glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-
-
 
         glfwSwapBuffers(window.GetGLFWwindow());
         glfwPollEvents();
@@ -193,6 +166,15 @@ void processInput(GLFWwindow *window) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        camera.Forward();
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        camera.Back();
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        camera.Left();
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        camera.Right();
 }
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
