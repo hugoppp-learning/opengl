@@ -1,12 +1,15 @@
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-#include "WindowInitilizer.h"
+#include "Window.h"
 //#include <intrin.h>
 #include "myAssert.h"
 
 
-GLFWwindow *WindowInitilizer::Init() {
+Window::Window() {
 
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -15,22 +18,27 @@ GLFWwindow *WindowInitilizer::Init() {
     //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 
-
-    GLFWwindow *window = glfwCreateWindow(
+    glfwWindow = glfwCreateWindow(
         800, 600, "LearnOpenGL", nullptr, nullptr);
-    if (window == nullptr) {
+    if (glfwWindow == nullptr) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
-        return nullptr;
+        return;
     }
-    glfwMakeContextCurrent(window);
+    glfwMakeContextCurrent(glfwWindow);
 
 
     if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
         std::cout << "Failed to initialize GLAD" << std::endl;
-        return nullptr;
+        return;
     }
 
+    initGL();
+    initImGui();
+
+}
+
+void Window::initGL() {
     int flags;
     glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
     if (flags & GL_CONTEXT_FLAG_DEBUG_BIT) {
@@ -45,10 +53,29 @@ GLFWwindow *WindowInitilizer::Init() {
 //    glEnable(GL_DEPTH_TEST);
     glClearColor(.2f, .2f, .2f, .2f);
     glViewport(0, 0, 800, 600);
-    return window;
 }
 
-void WindowInitilizer::printError(GLenum source, GLenum type, unsigned int id, GLenum severity, const char *message) {
+void Window::initImGui() const {// ---- IM GUI
+
+// Setup Dear ImGui context
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO &io = ImGui::GetIO();
+    (void) io;
+//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+
+// Setup Dear ImGui style
+    ImGui::StyleColorsDark();
+//ImGui::StyleColorsClassic();
+
+    const char *glsl_version = "#version 130";
+// Setup Platform/Renderer backends
+    ImGui_ImplGlfw_InitForOpenGL(glfwWindow, true);
+    ImGui_ImplOpenGL3_Init(glsl_version);
+}
+
+void Window::printError(GLenum source, GLenum type, unsigned int id, GLenum severity, const char *message) {
     std::cout << "---------------" <<
               std::endl;
     std::cout << "Debug message (" << id << "): " << message <<
@@ -135,12 +162,13 @@ void WindowInitilizer::printError(GLenum source, GLenum type, unsigned int id, G
               std::endl;
 }
 
-void APIENTRY WindowInitilizer::glDebugOutput(GLenum source, GLenum type, unsigned int id, GLenum severity, GLsizei length,
-                                         const char *message, const void *userParam) {
+void
+APIENTRY Window::glDebugOutput(GLenum source, GLenum type, unsigned int id, GLenum severity, GLsizei length,
+                               const char *message, const void *userParam) {
     // ignore non-significant error/warning codes
     if (id == 131169 || id == 131185 || id == 131218 || id == 131204)
         return;
 
-    WindowInitilizer::printError(source, type, id, severity, message);
+    Window::printError(source, type, id, severity, message);
     ASSERT(false);
 }

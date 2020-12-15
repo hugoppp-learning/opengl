@@ -3,7 +3,6 @@
 
 #include <vector>
 #include "Shader.h"
-#include "VertexAttributes.h"
 
 class VertexBufferLayout {
 private:
