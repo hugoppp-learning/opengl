@@ -7,7 +7,7 @@
 
 
 Shader::Shader(const char *vertexPath, const char *fragmentPath) {
-    // 1. retrieve the vertex/fragment source code from filePath
+    // 1. retrieve the vertex/fragment source code from m_filePath
     std::string vertexCode;
     std::string fragmentCode;
     std::ifstream vShaderFile;
@@ -48,18 +48,18 @@ Shader::Shader(const char *vertexPath, const char *fragmentPath) {
     glCompileShader(fragment);
     checkCompileErrors(fragment, "FRAGMENT");
     // shader Program
-    renderer_id = glCreateProgram();
-    glAttachShader(renderer_id, vertex);
-    glAttachShader(renderer_id, fragment);
-    glLinkProgram(renderer_id);
-    checkCompileErrors(renderer_id, "PROGRAM");
+    m_renderer_id = glCreateProgram();
+    glAttachShader(m_renderer_id, vertex);
+    glAttachShader(m_renderer_id, fragment);
+    glLinkProgram(m_renderer_id);
+    checkCompileErrors(m_renderer_id, "PROGRAM");
     // delete the shaders as they're linked into our program now and no longer necessary
     glDeleteShader(vertex);
     glDeleteShader(fragment);
 }
 
 void Shader::Bind() const {
-    glUseProgram(renderer_id);
+    glUseProgram(m_renderer_id);
 }
 
 void Shader::SetUniformMatrix4v(const std::string &name, const float *value) {
@@ -107,13 +107,13 @@ void Shader::Unbind() {
 }
 
 int Shader::GetUniformLocation(const std::string &name) {
-    if (uniform_location.find(name) != uniform_location.end())
-        return uniform_location[name];
+    if (m_uniform_location.find(name) != m_uniform_location.end())
+        return m_uniform_location[name];
 
-    int location = glGetUniformLocation(renderer_id, name.c_str());
+    int location = glGetUniformLocation(m_renderer_id, name.c_str());
     if (location < 0)
         std::cout << "WARNING::UNIFORM_LOCATION_DOES_NOT_EXIST: " << name << std::endl;
     else
-        uniform_location[name] = location;
+        m_uniform_location[name] = location;
     return location;
 }

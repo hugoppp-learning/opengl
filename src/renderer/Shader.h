@@ -8,8 +8,8 @@
 
 class Shader {
 private:
-    unsigned int renderer_id;
-    std::unordered_map<std::string, int> uniform_location;
+    unsigned int m_renderer_id;
+    std::unordered_map<std::string, int> m_uniform_location;
 public:
 
     Shader(const char *vertexPath, const char *fragmentPath);

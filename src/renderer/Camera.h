@@ -8,21 +8,21 @@
 
 class Camera {
 private:
-    glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-    glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-    const glm::vec3 worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
-    glm::vec3 cameraRight = glm::normalize(glm::cross(cameraFront, worldUp));
-//    const glm::vec3 RIGHT = ;
-
-    glm::vec3 position = glm::vec3(.0f, .0f, .0f);
-    glm::vec3 direction = glm::vec3(.0f, .0f, .0f);
-    double yaw = .0f;
-    double pitch = .0f;
-    float speed = .1f;
-    float MouseSensitivity = .1f;
+    const glm::vec3 WORLD_UP = glm::vec3(0.0f, 1.0f, 0.0f);
+    glm::vec3 m_cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+    glm::vec3 m_cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+    glm::vec3 m_cameraRight = glm::normalize(glm::cross(m_cameraFront, WORLD_UP));
+    glm::vec3 m_position = glm::vec3(.0f, .0f, .0f);
+    glm::vec3 m_direction = glm::vec3(.0f, .0f, .0f);
+    double m_yaw = .0f;
+    double m_pitch = .0f;
+    float m_speed = .1f;
+    float m_mouseSensitivity;
 public:
+    Camera(float mMouseSensitivity);
+
     glm::mat4 GetViewMatrix() {
-        return glm::lookAt(position, position + cameraFront, cameraUp);
+        return glm::lookAt(m_position, m_position + m_cameraFront, m_cameraUp);
     }
 
     void Left();

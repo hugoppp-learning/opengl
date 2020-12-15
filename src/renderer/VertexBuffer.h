@@ -5,23 +5,23 @@
 
 class VertexBuffer  {
 private:
-    unsigned int renderer_id;
-    unsigned int size;
+    unsigned int m_renderer_id;
+    unsigned int m_size;
 
 public:
 
-    VertexBuffer(const void *data, unsigned int size) : size(size) { // NOLINT(cppcoreguidelines-pro-type-member-init)
-        glGenBuffers(1, &renderer_id);
-        glBindBuffer(GL_ARRAY_BUFFER, renderer_id);
+    VertexBuffer(const void *data, unsigned int size) : m_size(size) { // NOLINT(cppcoreguidelines-pro-type-member-init)
+        glGenBuffers(1, &m_renderer_id);
+        glBindBuffer(GL_ARRAY_BUFFER, m_renderer_id);
         glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr)(size), data, GL_STATIC_DRAW);
     }
 
     ~VertexBuffer() {
-        glDeleteBuffers(1, &renderer_id);
+        glDeleteBuffers(1, &m_renderer_id);
     }
 
     void Bind() const {
-        glBindBuffer(GL_ARRAY_BUFFER, renderer_id);
+        glBindBuffer(GL_ARRAY_BUFFER, m_renderer_id);
     }
 
     void Unbind() const { // NOLINT(readability-convert-member-functions-to-static)
@@ -29,7 +29,7 @@ public:
     }
 
     unsigned int GetSize() const{
-        return size;
+        return m_size;
     };
 
 };

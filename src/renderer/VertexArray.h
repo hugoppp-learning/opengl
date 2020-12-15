@@ -9,14 +9,14 @@ class VertexArray {
 private:
 
 public:
-    unsigned int renderer_id;
+    unsigned int m_renderer_id;
 
     VertexArray() { // NOLINT(cppcoreguidelines-pro-type-member-init)
-        glGenVertexArrays(1, &renderer_id);
+        glGenVertexArrays(1, &m_renderer_id);
     }
 
     ~VertexArray() {
-        glDeleteVertexArrays(1, &renderer_id);
+        glDeleteVertexArrays(1, &m_renderer_id);
     }
 
     void AddBuffer(const VertexBuffer &vb, const VertexBufferLayout &layout) const {
@@ -28,13 +28,13 @@ public:
             const auto &attribute = attributes[i];
             glEnableVertexAttribArray(i);
             glVertexAttribPointer(
-                i, attribute.count, attribute.type, attribute.normalized, layout.GetStride(), (void *) offset);
+                i, attribute.m_count, attribute.m_type, attribute.m_normalized, layout.GetStride(), (void *) offset);
             offset += attribute.GetSize();
         }
     }
 
     void Bind() const {
-        glBindVertexArray(renderer_id);
+        glBindVertexArray(m_renderer_id);
     }
 
     void Unbind() const { // NOLINT(readability-convert-member-functions-to-static)

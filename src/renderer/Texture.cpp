@@ -8,14 +8,14 @@
 #include "stb_image/stb_image.h"
 
 Texture::Texture(std::string filePath)
-    :filePath(std::move(filePath)), width(0), height(0), nrChannels(0), renderer_id(0){
-    glGenTextures(1, &renderer_id);
-    glBindTexture(GL_TEXTURE_2D, renderer_id);
+    : m_filePath(std::move(filePath)), m_width(0), m_height(0), m_nrChannels(0), m_renderer_id(0){
+    glGenTextures(1, &m_renderer_id);
+    glBindTexture(GL_TEXTURE_2D, m_renderer_id);
 
     stbi_set_flip_vertically_on_load(1);
-    unsigned char *data = stbi_load(this->filePath.c_str(), &width, &height, &nrChannels, 4);
+    unsigned char *data = stbi_load(this->m_filePath.c_str(), &m_width, &m_height, &m_nrChannels, 4);
     if (data) {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
         stbi_image_free(data);
     } else {
@@ -29,12 +29,12 @@ Texture::Texture(std::string filePath)
 }
 
 Texture::~Texture(){
-    glDeleteTextures(1, &renderer_id);
+    glDeleteTextures(1, &m_renderer_id);
 }
 
 void Texture::Bind(unsigned int slot){
     glActiveTexture(GL_TEXTURE0 + slot);
-    glBindTexture(GL_TEXTURE_2D, renderer_id);
+    glBindTexture(GL_TEXTURE_2D, m_renderer_id);
 }
 
 void Texture::Unbind(){
