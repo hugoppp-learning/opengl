@@ -4,8 +4,7 @@
 #include <renderer/Texture.h>
 
 #include "renderer/Shader.h"
-#include "renderer/VertexBuffer.h"
-#include "renderer/IndexBuffer.h"
+#include "renderer/Buffer.h"
 #include "renderer/VertexBufferLayout.h"
 #include "renderer/VertexArray.h"
 #include "renderer/Renderer.h"
@@ -60,6 +59,49 @@ int main() {
         0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,// RT
         0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f,// RB
     };
+    float vertices2[] = {
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+
+        0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+        0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+        0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+        0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+        0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+        0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+        0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+        0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+        0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+        0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+        0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
+    };
 
     unsigned int indices[] = {
         0, 1, 3,
@@ -67,6 +109,7 @@ int main() {
     };
 
     glfwSetCursorPosCallback(window.GetGLFWwindow(), mouse_callback);
+
     Shader shader = Shader("../res/1.vert", "../res/1.frag");
     shader.Bind();
     VertexBuffer vb(vertices, sizeof(vertices));
@@ -77,14 +120,20 @@ int main() {
     VertexArray va;
     va.AddBuffer(vb, layout);
     IndexBuffer ib(indices, 6);
-
-    va.Unbind();
-    vb.Unbind();
-    ib.Unbind();
-    shader.Unbind();
-
-//    Texture texture("../res/1.jpg");
     Texture texture("../res/holo.png");
+
+
+    VertexBuffer vb2_cubes(vertices2, sizeof(vertices2));
+    VertexBufferLayout layout_cubes;
+    layout_cubes.Push<float>(3);
+    layout_cubes.Push<float>(3);
+
+//    VertexArray vao2_lightCube;
+//    VertexBufferLayout layout_lightCube;
+//    layout_cubes.Push<float>(3);
+//    layout_cubes.Push<float>(3);
+//    vao2_lightCube.AddBuffer(vb, layout_lightCube);
+
 
     Renderer renderer;
     glm::mat4 projection =
@@ -96,6 +145,10 @@ int main() {
     glm::vec3 transl(0.45f, 0.55f, 0.60f);
     glm::vec4 clear_color(0.45f, 0.55f, 0.60f, 1.00f);
 
+    va.Unbind();
+    vb.Unbind();
+    ib.Unbind();
+    shader.Unbind();
     while (!glfwWindowShouldClose(window.GetGLFWwindow())) {
         processInput(window.GetGLFWwindow());
         renderer.Clear();
@@ -113,6 +166,7 @@ int main() {
         auto mvp = projection * view/* * model*/;
         shader.SetUniformMatrix4v("mvp", glm::value_ptr(mvp));
         renderer.Draw(va, ib, shader);
+//        renderer.DrawArrays(va, shader, 36);
         shader.Unbind();
 
         {

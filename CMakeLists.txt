@@ -33,13 +33,18 @@ set(SOURCE_FILES
         src/renderer/Shader.h
         src/renderer/VertexArray.h
         src/renderer/VertexBufferLayout.h
-        src/renderer/VertexBuffer.h
-        src/renderer/IndexBuffer.h
+        src/renderer/Buffer.h
         src/myAssert.h
         src/renderer/Renderer.cpp
         src/renderer/Renderer.h
         src/renderer/Texture.cpp src/renderer/Texture.h
-        src/renderer/GLDebugCallBack.h src/renderer/Window.cpp src/renderer/Window.h src/renderer/VertexBufferLayout.cpp src/renderer/Camera.cpp src/renderer/Camera.h)
+        src/renderer/Window.cpp
+        src/renderer/Window.h
+        src/renderer/VertexBufferLayout.cpp
+        src/renderer/Camera.cpp
+        src/renderer/Camera.h
+
+        )
 
 
 add_executable(openglTEST ${SOURCE_FILES} ${IMGUI_SOURCE_FILES})

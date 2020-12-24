@@ -1,16 +1,14 @@
 #ifndef OPENGLTEST_VERTEXARRAY_H
 #define OPENGLTEST_VERTEXARRAY_H
 
-#include "VertexBuffer.h"
+#include "Buffer.h"
 #include "VertexBufferLayout.h"
 #include <glad/glad.h>
 
 class VertexArray {
 private:
-
-public:
     unsigned int m_renderer_id;
-
+public:
     VertexArray() { // NOLINT(cppcoreguidelines-pro-type-member-init)
         glGenVertexArrays(1, &m_renderer_id);
     }
