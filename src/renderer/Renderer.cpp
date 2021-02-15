@@ -1,17 +1,17 @@
 #include "Renderer.h"
 
-void Renderer::Draw(const VertexArray &va, const IndexBuffer &ib, const Shader &shader) const {
+void Renderer::Draw(const VertexArray &vao, const IndexBuffer &ebo, const Shader &shader) {
     shader.Bind();
-    va.Bind();
-    glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, nullptr);
+    vao.Bind();
+    glDrawElements(GL_TRIANGLES, ebo.GetCount(), GL_UNSIGNED_INT, nullptr);
 }
 
-void Renderer::DrawArrays(const VertexArray &va, const Shader &shader, unsigned int count) const {
+void Renderer::DrawArrays(const VertexArray &vao, const Shader &shader, unsigned int count) {
     shader.Bind();
-    va.Bind();
+    vao.Bind();
     glDrawArrays(GL_TRIANGLES, 0, count);
 }
 
-void Renderer::Clear() const {
+void Renderer::Clear() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }

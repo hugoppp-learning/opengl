@@ -1,7 +1,4 @@
-
-#ifndef OPENGLTEST_WINDOW_H
-#define OPENGLTEST_WINDOW_H
-
+#pragma once
 
 class Window {
 public:
@@ -24,6 +21,3 @@ private:
 
     static void initGL() ;
 };
-
-
-#endif //OPENGLTEST_WINDOW_H

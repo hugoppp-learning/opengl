@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.17)
 project(openglTEST)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
@@ -43,8 +44,8 @@ set(SOURCE_FILES
         src/renderer/VertexBufferLayout.cpp
         src/renderer/Camera.cpp
         src/renderer/Camera.h
-
-        )
+        src/renderer/Mesh.cpp
+        src/renderer/Mesh.h)
 
 
 add_executable(openglTEST ${SOURCE_FILES} ${IMGUI_SOURCE_FILES})

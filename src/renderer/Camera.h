@@ -1,7 +1,4 @@
-
-#ifndef OPENGLTEST_CAMERA_H
-#define OPENGLTEST_CAMERA_H
-
+#pragma once
 
 #include <glm/glm.hpp>
 #include <glm/ext/matrix_transform.hpp>
@@ -42,4 +39,3 @@ public:
 };
 
 
-#endif //OPENGLTEST_CAMERA_H

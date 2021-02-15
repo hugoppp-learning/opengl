@@ -56,7 +56,7 @@ void Window::initGL() {
     glViewport(0, 0, 800, 600);
 }
 
-void Window::initImGui() const {// ---- IM GUI
+void Window::initImGui() const {
 
 // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
@@ -104,8 +104,7 @@ void Window::printError(GLenum source, GLenum type, unsigned int id, GLenum seve
         default:
             ASSERT(false);
     }
-    std::cout <<
-              std::endl;
+    std::cout << std::endl;
 
     switch (type) {
         case GL_DEBUG_TYPE_ERROR:
@@ -138,8 +137,7 @@ void Window::printError(GLenum source, GLenum type, unsigned int id, GLenum seve
         default:
             ASSERT(false);
     }
-    std::cout <<
-              std::endl;
+    std::cout << std::endl;
 
     switch (severity) {
         case GL_DEBUG_SEVERITY_HIGH:
@@ -157,10 +155,8 @@ void Window::printError(GLenum source, GLenum type, unsigned int id, GLenum seve
         default:
             ASSERT(false);
     }
-    std::cout <<
-              std::endl;
-    std::cout <<
-              std::endl;
+    std::cout << std::endl;
+    std::cout << std::endl;
 }
 
 void

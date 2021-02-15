@@ -1,5 +1,4 @@
-#ifndef OPENGLTEST_VERTEXBUFFERLAYOUT_H
-#define OPENGLTEST_VERTEXBUFFERLAYOUT_H
+#pragma once
 
 #include <vector>
 #include "Shader.h"
@@ -36,6 +35,3 @@ public:
 
     static unsigned int getSizeOfGLType(unsigned int type);
 };
-
-
-#endif //OPENGLTEST_VERTEXBUFFERLAYOUT_H

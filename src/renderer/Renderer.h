@@ -1,5 +1,4 @@
-#ifndef OPENGLTEST_RENDERER_H
-#define OPENGLTEST_RENDERER_H
+#pragma once
 
 #include "VertexArray.h"
 #include "Shader.h"
@@ -7,12 +6,11 @@
 
 class Renderer {
 public:
-    void Draw(const VertexArray &va, const IndexBuffer &ib, const Shader &shader) const;
+    static void Draw(const VertexArray &vao, const IndexBuffer &ebo, const Shader &shader) ;
 
-    void Clear() const;
+    static void Clear() ;
 
-    void DrawArrays(const VertexArray &va, const Shader &shader, unsigned int count) const;
+    static void DrawArrays(const VertexArray &vao, const Shader &shader, unsigned int count) ;
 };
 
 
-#endif //OPENGLTEST_RENDERER_H

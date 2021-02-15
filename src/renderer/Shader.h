@@ -1,7 +1,5 @@
 // copied from https://learnopengl.com/Getting-started/Shaders
-#ifndef OPENGLTEST_SHADER_H
-#define OPENGLTEST_SHADER_H
-
+#pragma once
 #include <glad/glad.h>
 #include <string>
 #include <unordered_map>
@@ -26,11 +24,9 @@ public:
 
     int GetUniformLocation(const std::string &name);
 
-    void Unbind();
+    static void Unbind();
 
     static void checkCompileErrors(unsigned int shader, const std::string &type);
 
     void SetUniformMatrix4v(const std::string &name, const float *value);
 };
-
-#endif //OPENGLTEST_SHADER_H
