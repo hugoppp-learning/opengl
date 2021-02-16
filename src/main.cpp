@@ -16,6 +16,7 @@
 #include <imgui/imgui_impl_glfw.h>
 #include <renderer/Camera.h>
 #include <renderer/Mesh.h>
+#include <renderer/Meshes/Cube.h>
 #include "renderer/Window.h"
 
 #pragma clang diagnostic push
@@ -36,91 +37,8 @@ Camera camera(.1f);
 int main() {
 
     Window window;
-    float vertices_holo[] = {
-        //    positions            colors             tex pos
-        -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,// LB
-        -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,// LT
-        0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,// RT
-        0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f,// RB
-    };
-
-
-//    std::vector<Vertex>(Vertex(-0.5f, -0.5f, 0.0f, <#initializer#>));
-//    Mesh holo_mesh();
-
-    float vertices_cubes[] = {
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-        0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-    };
-
-    unsigned int indices[] = {
-        0, 1, 3,
-        3, 2, 1,
-    };
 
     glfwSetCursorPosCallback(window.GetGLFWwindow(), mouse_callback);
-
-    Shader shader = Shader("../res/1.vert", "../res/1.frag");
-//    shader.Bind();
-//    VertexBuffer vb_holo(vertices_holo, sizeof(vertices_holo));
-//    VertexBufferLayout layout;
-//    layout.Push<float>(3);
-//    layout.Push<float>(3);
-//    layout.Push<float>(2);
-//    VertexArray va_holo;
-//    va_holo.AddBuffer(vb_holo, layout);
-//    IndexBuffer ib_holo(indices, 6);
-//    Texture texture_holo("../res/holo.png");
-
-//    Mesh holo (holo);
-
-
-    VertexBuffer vb_cubes(vertices_cubes, sizeof(vertices_cubes));
-    VertexBufferLayout layout_cubes;
-    layout_cubes.Push<float>(3);
-    layout_cubes.Push<float>(2);
-    VertexArray vao_Cube;
-    vao_Cube.AddBuffer(vb_cubes, layout_cubes);
-
 
     Renderer renderer;
     glm::mat4 projection =
@@ -144,10 +62,8 @@ int main() {
         glm::vec3( 1.5f,  0.2f, -1.5f),
         glm::vec3(-1.3f,  1.0f, -1.5f)
     };
-//    VertexArray::Unbind();
-//    VertexBuffer::Unbind();
-//    IndexBuffer::Unbind();
-//    Shader::Unbind();
+    Cube cube;
+    Shader shader = Shader("../res/colored.vert", "../res/colored.frag");
     shader.Bind();
     glEnable(GL_DEPTH_TEST);
     while (!glfwWindowShouldClose(window.GetGLFWwindow())) {
@@ -156,21 +72,16 @@ int main() {
 
         glm::mat4 view = camera.GetViewMatrix();
 
-        for(unsigned int i = 0; i < 10; i++)
-        {
+        for (unsigned int i = 0; i < 10; i++) {
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, cubePositions[i]);
             float angle = 20.0f * i;
             model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
             auto mvp = projection * view * model;
             shader.SetUniformMatrix4v("u_mvp", glm::value_ptr(mvp));
-            Renderer::DrawArrays(vao_Cube, shader, 36);
-
+            shader.SetUniform4f("u_color", 0.4f, 0.2f, 0.8f, 1.0f);
+            cube.mesh.Draw(shader);
         }
-
-        auto mvp = projection * view; // * model;
-        shader.SetUniformMatrix4v("u_mvp", glm::value_ptr(mvp));
-//        Renderer::Draw(va_holo, ib_holo, shader);
 
         {
             glfwPollEvents();

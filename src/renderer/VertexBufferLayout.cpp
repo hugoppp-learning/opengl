@@ -3,21 +3,24 @@
 
 
 template<>
-void VertexBufferLayout::Push<float>(unsigned int count) {
+VertexBufferLayout &VertexBufferLayout::Push<float>(unsigned int count) {
     m_attributes.push_back({GL_FLOAT, count, GL_FALSE});
     m_stride += VertexBufferLayout::getSizeOfGLType(GL_FLOAT) * count;
+    return *this;
 }
 
 template<>
-void VertexBufferLayout::Push<int>(unsigned int count) {
+VertexBufferLayout &VertexBufferLayout::Push<int>(unsigned int count) {
     m_attributes.push_back({GL_INT, count, GL_FALSE});
     m_stride += VertexBufferLayout::getSizeOfGLType(GL_INT) * count;
+    return *this;
 }
 
 template<>
-void VertexBufferLayout::Push<unsigned int>(unsigned int count) {
+VertexBufferLayout &VertexBufferLayout::Push<unsigned int>(unsigned int count) {
     m_attributes.push_back({GL_UNSIGNED_INT, count, GL_FALSE});
     m_stride += VertexBufferLayout::getSizeOfGLType(GL_UNSIGNED_INT) * count;
+    return *this;
 }
 
 unsigned int VertexBufferLayout::getSizeOfGLType(unsigned int type) {

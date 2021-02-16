@@ -5,6 +5,9 @@
 class VertexBuffer  {
 private:
     unsigned int m_renderer_id{};
+    /*
+     * Size of the buffer, in bytes.
+     */
     unsigned int m_size;
 
 public:

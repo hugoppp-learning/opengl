@@ -14,13 +14,13 @@ public:
 
     void Bind() const;
 
-    void SetUniform(const std::string &name, bool value);
+    void SetUniform1b(const std::string &name, bool value);
 
-    void SetUniform(const std::string &name, int value);
+    void SetUniform1i(const std::string &name, int value);
 
-    void SetUniform(const std::string &name, float value);
+    void SetUniform1f(const std::string &name, float value);
 
-    void SetUniform(const std::string &name, float v0, float v1, float v2, float v3);
+    void SetUniform4f(const std::string &name, float v0, float v1, float v2, float v3);
 
     int GetUniformLocation(const std::string &name);
 

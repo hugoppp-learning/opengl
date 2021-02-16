@@ -2,41 +2,59 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <utility>
 #include <vector>
 #include "Texture.h"
 #include "VertexArray.h"
+#include "Renderer.h"
 #include <optional>
+#include <variant>
 
 
 struct Vertex {
     glm::vec3 Position;
-    std::optional<glm::vec3> Normal;
-    std::optional<glm::vec2> TexCoords;
-    std::optional<glm::vec4> VertColors;
+    glm::vec3 Normal;
 
     Vertex(const glm::vec3 &position,
-           const glm::vec3 &normal,
-           const glm::vec2 &texCoords,
-           const std::optional<glm::vec4> &vertColors = std::nullopt)
-        : Position(position), Normal(normal), TexCoords(texCoords), VertColors(vertColors) {}
+           const glm::vec3 &normal
+    )
+        : Position(position), Normal(normal) {}
 };
 
 class Mesh {
 public:
-    Mesh(std::vector<Vertex> vertecies, std::vector<Texture> textures, std::vector<unsigned int> indicies);
 
-    std::vector<Vertex> m_vertecies;
-    std::vector<unsigned int> m_indicies;
-    std::vector<Texture> m_textures;
+    Mesh(void *vertecies,
+         int vertecies_count,
+         const VertexBufferLayout &layout,
+         std::optional<std::vector<unsigned int>> indicies = std::nullopt)
+        : m_vertecies(vertecies),
+          m_vertecies_count(vertecies_count),
+          m_indicies(std::move(indicies)),
+          m_vao(),
+          m_vbo(m_vertecies, m_vertecies_count * layout.GetStride()),
+          m_ebo() {
 
+        if (m_indicies.has_value()) {
+            m_ebo = IndexBuffer(&m_indicies.value()[0], m_indicies.value().size());
+        }
 
-    void Draw(Shader &shader);
+        m_vao.AddBuffer(m_vbo, layout);
+    }
+
+    int m_vertecies_count;
+    void *m_vertecies;
+    std::optional<std::vector<unsigned int>> m_indicies;
+
+    void Draw(Shader &shader) const {
+        if (m_ebo.has_value())
+            Renderer::Draw(m_vao, m_ebo.value(), shader);
+        else
+            Renderer::DrawArrays(m_vao, shader, m_vertecies_count);
+    }
 
 private:
     VertexArray m_vao;
     VertexBuffer m_vbo;
-    IndexBuffer m_ebo;
-
+    std::optional<IndexBuffer> m_ebo;
 };
-
-
