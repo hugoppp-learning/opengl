@@ -4,9 +4,9 @@
 #include <glm/glm.hpp>
 #include <utility>
 #include <vector>
-#include "Texture.h"
+#include "Texture.hpp"
 #include "VertexArray.h"
-#include "Renderer.h"
+#include "Renderer.hpp"
 #include <optional>
 #include <variant>
 

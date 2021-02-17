@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Buffer.h"
-#include "VertexBufferLayout.h"
+#include "Buffer.hpp"
+#include "VertexBufferLayout.hpp"
 #include <glad/glad.h>
 #include <vector>
 

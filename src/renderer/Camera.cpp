@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Camera.h"
+#include "Camera.hpp"
 
 void Camera::Left() {
     m_position -= glm::cross(m_cameraFront, m_cameraUp) * m_speed;

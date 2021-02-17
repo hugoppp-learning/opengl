@@ -4,9 +4,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-#include "Window.h"
+#include "Window.hpp"
 //#include <intrin.h>
-#include "myAssert.h"
+#include "myAssert.hpp"
 
 
 Window::Window() {

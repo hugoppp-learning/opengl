@@ -1,5 +1,5 @@
-#include "VertexBufferLayout.h"
-#include "myAssert.h"
+#include "VertexBufferLayout.hpp"
+#include "myAssert.hpp"
 
 
 template<>

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "Shader.h"
+#include "Shader.hpp"
 
 class VertexBufferLayout {
 private:

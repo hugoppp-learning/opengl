@@ -1,23 +1,23 @@
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <renderer/Texture.h>
+#include <renderer/Texture.hpp>
 
-#include "renderer/Shader.h"
-#include "renderer/Buffer.h"
-#include "renderer/VertexBufferLayout.h"
+#include "renderer/Shader.hpp"
+#include "renderer/Buffer.hpp"
+#include "renderer/VertexBufferLayout.hpp"
 #include "renderer/VertexArray.h"
-#include "renderer/Renderer.h"
+#include "renderer/Renderer.hpp"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_opengl3.h>
 #include <imgui/imgui_impl_glfw.h>
-#include <renderer/Camera.h>
-#include <renderer/Mesh.h>
-#include <renderer/Meshes/Cube.h>
-#include "renderer/Window.h"
+#include <renderer/Camera.hpp>
+#include <renderer/Mesh.hpp>
+#include <renderer/Meshes/Cube.hpp>
+#include "renderer/Window.hpp"
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "OCUnusedGlobalDeclarationInspection"

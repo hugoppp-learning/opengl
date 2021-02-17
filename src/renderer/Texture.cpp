@@ -1,5 +1,5 @@
 #include <string>
-#include "Texture.h"
+#include "Texture.hpp"
 #include <glad/glad.h>
 #include <iostream>
 #include <utility>

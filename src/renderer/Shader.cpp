@@ -1,5 +1,5 @@
 // copied from https://learnopengl.com/Getting-started/Shaders
-#include "Shader.h"
+#include "Shader.hpp"
 #include <string>
 #include <fstream>
 #include <sstream>

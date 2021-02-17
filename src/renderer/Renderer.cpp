@@ -1,4 +1,4 @@
-#include "Renderer.h"
+#include "Renderer.hpp"
 
 void Renderer::Draw(const VertexArray &vao, const IndexBuffer &ebo, const Shader &shader) {
     shader.Bind();

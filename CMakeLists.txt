@@ -31,20 +31,20 @@ set(SOURCE_FILES
         lib/glad/glad.c
         src/main.cpp
         src/renderer/Shader.cpp
-        src/renderer/Shader.h
+        src/renderer/Shader.hpp
         src/renderer/VertexArray.h
-        src/renderer/VertexBufferLayout.h
-        src/renderer/Buffer.h
-        src/myAssert.h
+        src/renderer/VertexBufferLayout.hpp
+        src/renderer/Buffer.hpp
+        src/myAssert.hpp
         src/renderer/Renderer.cpp
-        src/renderer/Renderer.h
-        src/renderer/Texture.cpp src/renderer/Texture.h
+        src/renderer/Renderer.hpp
+        src/renderer/Texture.cpp src/renderer/Texture.hpp
         src/renderer/Window.cpp
-        src/renderer/Window.h
+        src/renderer/Window.hpp
         src/renderer/VertexBufferLayout.cpp
         src/renderer/Camera.cpp
-        src/renderer/Camera.h
-        src/renderer/Mesh.h src/renderer/Meshes/Cube.h)
+        src/renderer/Camera.hpp
+        src/renderer/Mesh.hpp src/renderer/Meshes/Cube.hpp)
 
 
 add_executable(openglTEST ${SOURCE_FILES} ${IMGUI_SOURCE_FILES})
