@@ -18,6 +18,10 @@ private:
 public:
     Camera(float mMouseSensitivity);
 
+    glm::vec3 GetPosition(){
+        return m_position;
+    }
+
     glm::mat4 GetViewMatrix() {
         return glm::lookAt(m_position, m_position + m_cameraFront, m_cameraUp);
     }

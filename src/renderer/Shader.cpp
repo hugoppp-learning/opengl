@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <glm/vec3.hpp>
 
 
 Shader::Shader(const char *vertexPath, const char *fragmentPath) {
@@ -62,7 +63,7 @@ void Shader::Bind() const {
     glUseProgram(m_renderer_id);
 }
 
-void Shader::SetUniformMatrix4v(const std::string &name, const float *value) {
+void Shader::SetUniformMatrix4f(const std::string &name, const float *value) {
     glUniformMatrix4fv(GetUniformLocation(name),1, GL_FALSE, value);
 }
 
@@ -76,6 +77,18 @@ void Shader::SetUniform1i(const std::string &name, int value) {
 
 void Shader::SetUniform1f(const std::string &name, float value) {
     glUniform1f(GetUniformLocation(name), value);
+}
+
+void Shader::SetUniform4f(const std::string &name, const glm::vec4 &vec4) {
+    glUniform4f(GetUniformLocation(name), vec4.x, vec4.y, vec4.z, vec4.z);
+}
+
+void Shader::SetUniform3f(const std::string &name, const glm::vec3 &vec3) {
+    glUniform3f(GetUniformLocation(name), vec3.x, vec3.y, vec3.z);
+}
+
+void Shader::SetUniform3f(const std::string &name, float v0, float v1, float v2) {
+    glUniform3f(GetUniformLocation(name), v0, v1, v2);
 }
 
 void Shader::SetUniform4f(const std::string &name, float v0, float v1, float v2, float v3) {

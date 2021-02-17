@@ -3,6 +3,7 @@
 #include <glad/glad.h>
 #include <string>
 #include <unordered_map>
+#include "Camera.hpp"
 
 class Shader {
 private:
@@ -28,5 +29,11 @@ public:
 
     static void checkCompileErrors(unsigned int shader, const std::string &type);
 
-    void SetUniformMatrix4v(const std::string &name, const float *value);
+    void SetUniformMatrix4f(const std::string &name, const float *value);
+
+    void SetUniform3f(const std::string &name, float v0, float v1, float v2);
+
+    void SetUniform4f(const std::string &name, const glm::vec4 &vec4);
+
+    void SetUniform3f(const std::string &name, const glm::vec3 &vec3);
 };
