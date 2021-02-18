@@ -44,7 +44,7 @@ set(SOURCE_FILES
         src/renderer/VertexBufferLayout.cpp
         src/renderer/Camera.cpp
         src/renderer/Camera.hpp
-        src/renderer/Mesh.hpp src/renderer/Meshes/Cube.hpp)
+        src/renderer/Mesh.hpp src/renderer/Meshes/Cube.hpp src/ChunkGenenerator.hpp src/Chunk.hpp src/renderer/Array3D.hpp)
 
 
 add_executable(openglTEST ${SOURCE_FILES} ${IMGUI_SOURCE_FILES})

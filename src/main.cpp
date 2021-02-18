@@ -2,7 +2,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <renderer/Texture.hpp>
-
 #include "renderer/Shader.hpp"
 #include "renderer/Buffer.hpp"
 #include "renderer/VertexBufferLayout.hpp"
@@ -18,6 +17,8 @@
 #include <renderer/Mesh.hpp>
 #include <renderer/Meshes/Cube.hpp>
 #include "renderer/Window.hpp"
+#include "Chunk.hpp"
+#include "ChunkGenenerator.hpp"
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "OCUnusedGlobalDeclarationInspection"
@@ -33,13 +34,18 @@ void DrawImGui(glm::vec4 &clear_color, glm::vec4 &ambient_color, glm::vec4 &mode
 
 void processInput(GLFWwindow *window);
 
+void drawTutorialCubes(Shader &shader, glm::vec4 modelColor, glm::vec4 ambientColor, glm::vec4 defuseColor);
+
 Camera camera(.1f);
 Window window;
 
 int main() {
 
-
     glfwSetCursorPosCallback(window.GetGLFWwindow(), mouse_callback);
+
+    Chunk chunk;
+    ChunkGenenerator::generate(chunk);
+    std::cout << (int) chunk.at(10,10,10);
 
     glm::vec3 transl(0.45f, 0.55f, 0.60f);
 
@@ -48,19 +54,14 @@ int main() {
     glm::vec4 ambientColor(0.0f, 0.0f, 0.2f, 1.0f) ;
     glm::vec4 defuseColor(0.99f, 0.99f, 0.99f, 1.0f);
 
-    glm::vec3 cubePositions[] = {
-        glm::vec3( 0.0f,  0.0f,  0.0f),
-        glm::vec3( 2.0f,  5.0f, -15.0f),
-        glm::vec3(-1.5f, -2.2f, -2.5f),
-        glm::vec3(-3.8f, -2.0f, -12.3f),
+    std::vector<glm::vec3> cubPos(chunk.volume);
 
-        glm::vec3( 2.4f, -0.4f, -3.5f),
-        glm::vec3(-1.7f,  3.0f, -7.5f),
-        glm::vec3( 1.3f, -2.0f, -2.5f),
-        glm::vec3( 1.5f,  2.0f, -2.5f),
-        glm::vec3( 1.5f,  0.2f, -1.5f),
-        glm::vec3(-1.3f,  1.0f, -1.5f)
-    };
+    for (int x = 0; x < chunk.x_size; ++x)
+    for (int y = 0; y < chunk.y_size; ++y)
+    for (int z = 0; z < chunk.z_size; ++z) {
+        cubPos.emplace_back(x,y,z);
+    }
+
     Cube cube;
     Shader shader = Shader("../res/colored.vert", "../res/colored.frag");
     shader.Bind();
@@ -86,30 +87,54 @@ int main() {
         shader.SetUniform4f("u_defuseColor", defuseColor);
         shader.SetUniform3f("u_lightPos", 10.5f, 10.5f, 10.5f);
 
-        for (unsigned int i = 0; i < 10; i++) {
-            glm::mat4 model = glm::mat4(1.0f);
-            model = glm::translate(model, cubePositions[i]);
-            float angle = 20.0f * i;
-            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+//        for (auto & cubPo : cubPos) {
+//            glm::mat4 model = glm::mat4(1.0f);
+//            model = glm::translate(model, cubPo);
+//            shader.SetUniformMatrix4f("u_m", glm::value_ptr(model));
+//            cube.mesh.Draw(shader);
+//        }
 
-            shader.SetUniformMatrix4f("u_m", glm::value_ptr(model));
-
-            cube.mesh.Draw(shader);
-        }
-        /* ImGui */ {
-            DrawImGui(clear_color, ambientColor, modelColor, defuseColor);
-
-        }
+        drawTutorialCubes(shader, modelColor, ambientColor, defuseColor);
 
         int display_w, display_h;
         glfwGetFramebufferSize(window.GetGLFWwindow(), &display_w, &display_h);
         glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 
+        DrawImGui(clear_color, ambientColor, modelColor, defuseColor);
         glfwSwapBuffers(window.GetGLFWwindow());
         glfwPollEvents();
     }
     glfwTerminate();
     return 0;
+}
+
+void drawTutorialCubes(Shader &shader, glm::vec4 modelColor, glm::vec4 ambientColor, glm::vec4 defuseColor) {
+    shader.SetUniform4f("u_modelColor", modelColor);
+    shader.SetUniform4f("u_ambientColor", ambientColor);
+    shader.SetUniform4f("u_defuseColor", defuseColor);
+    Cube cube;
+    glm::vec3 cubePositios[] = {
+        glm::vec3( 0.0f,  0.0f,  0.0f),
+        glm::vec3( 2.0f,  5.0f, -15.0f),
+        glm::vec3(-1.5f, -2.2f, -2.5f),
+        glm::vec3(-3.8f, -2.0f, -12.3f),
+        glm::vec3( 2.4f, -0.4f, -3.5f),
+        glm::vec3(-1.7f,  3.0f, -7.5f),
+        glm::vec3( 1.3f, -2.0f, -2.5f),
+        glm::vec3( 1.5f,  2.0f, -2.5f),
+        glm::vec3( 1.5f,  0.2f, -1.5f),
+        glm::vec3(-1.3f,  1.0f, -1.5f)
+    };
+
+
+    for (unsigned int i = 0; i < 10; i++) {
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, cubePositios[i]);
+        float angle = 20.0f * i;
+        model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+        shader.SetUniformMatrix4f("u_m", glm::value_ptr(model));
+        cube.mesh.Draw(shader);
+    }
 }
 
 void DrawImGui(glm::vec4 &clear_color, glm::vec4 &ambient_color, glm::vec4 &model_color, glm::vec4 &defuse_color) {
