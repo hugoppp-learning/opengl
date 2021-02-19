@@ -8,25 +8,7 @@ set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
-set(IMGUI_SOURCE_FILES
-        src/imgui/imconfig.h
-        src/imgui/imgui.cpp
-        src/imgui/imgui.h
-        src/imgui/imgui_demo.cpp
-        src/imgui/imgui_draw.cpp
-        src/imgui/imgui_impl_glfw.cpp
-        src/imgui/imgui_impl_glfw.h
-        src/imgui/imgui_impl_opengl3.cpp
-        src/imgui/imgui_impl_opengl3.h
-        src/imgui/imgui_internal.h
-        src/imgui/imgui_tables.cpp
-        src/imgui/imgui_widgets.cpp
-        src/imgui/imstb_rectpack.h
-        src/imgui/imstb_textedit.h
-        src/imgui/imstb_truetype.h
-        )
-
-set(SOURCE_FILES
+add_executable(openglTEST
         lib/stb_image/stb_image.h
         lib/glad/glad.c
         src/main.cpp
@@ -38,16 +20,18 @@ set(SOURCE_FILES
         src/myAssert.hpp
         src/renderer/Renderer.cpp
         src/renderer/Renderer.hpp
-        src/renderer/Texture.cpp src/renderer/Texture.hpp
+        src/renderer/Texture.cpp
+        src/renderer/Texture.hpp
         src/renderer/Window.cpp
         src/renderer/Window.hpp
         src/renderer/VertexBufferLayout.cpp
         src/renderer/Camera.cpp
         src/renderer/Camera.hpp
-        src/renderer/Mesh.hpp src/renderer/Meshes/Cube.hpp src/ChunkGenenerator.hpp src/Chunk.hpp src/renderer/Array3D.hpp)
-
-
-add_executable(openglTEST ${SOURCE_FILES} ${IMGUI_SOURCE_FILES})
+        src/renderer/Mesh.hpp
+        src/renderer/Meshes/Cube.hpp
+        src/ChunkGenerator.hpp
+        src/Chunk.hpp
+        src/Array3D.hpp)
 
 target_include_directories(openglTEST PRIVATE ${PROJECT_SOURCE_DIR}/lib)
 target_include_directories(openglTEST PRIVATE ${PROJECT_SOURCE_DIR}/src)
@@ -55,10 +39,10 @@ target_include_directories(openglTEST PRIVATE ${PROJECT_SOURCE_DIR}/lib/glfw/inc
 
 add_subdirectory(lib/GLFW)
 add_subdirectory(lib/glm)
-
+add_subdirectory(lib/imgui)
 
 target_link_libraries(openglTEST
         glfw
         glm
+        imgui
         )
-

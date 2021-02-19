@@ -3,7 +3,7 @@
 
 #define xyz x, y, z
 
-class ChunkGenenerator {
+class ChunkGenerator {
 public:
 
     static void generate(Chunk &chunk) {

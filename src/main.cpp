@@ -1,7 +1,7 @@
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <renderer/Texture.hpp>
+#include "renderer/Texture.hpp"
 #include "renderer/Shader.hpp"
 #include "renderer/Buffer.hpp"
 #include "renderer/VertexBufferLayout.hpp"
@@ -18,7 +18,7 @@
 #include <renderer/Meshes/Cube.hpp>
 #include "renderer/Window.hpp"
 #include "Chunk.hpp"
-#include "ChunkGenenerator.hpp"
+#include "ChunkGenerator.hpp"
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "OCUnusedGlobalDeclarationInspection"
@@ -44,15 +44,15 @@ int main() {
     glfwSetCursorPosCallback(window.GetGLFWwindow(), mouse_callback);
 
     Chunk chunk;
-    ChunkGenenerator::generate(chunk);
+    ChunkGenerator::generate(chunk);
     std::cout << (int) chunk.at(10,10,10);
 
     glm::vec3 transl(0.45f, 0.55f, 0.60f);
 
     glm::vec4 clear_color(0.189f, 0.193f, 0.201f, 1.000f);
-    glm::vec4 modelColor(0.4f, 0.2f, 0.8f, 1.0f);
-    glm::vec4 ambientColor(0.0f, 0.0f, 0.2f, 1.0f) ;
-    glm::vec4 defuseColor(0.99f, 0.99f, 0.99f, 1.0f);
+    glm::vec4 modelColor(0.635f, 0.551f, 0.770f, 1.000f);
+    glm::vec4 ambientColor(0.039f, 0.040f, 0.495f, 1.000f) ;
+    glm::vec4 defuseColor(0.873f, 0.794f, 0.171f, 1.000f);
 
     std::vector<glm::vec3> cubPos(chunk.volume);
 
