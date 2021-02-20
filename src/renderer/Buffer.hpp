@@ -34,6 +34,14 @@ public:
         return m_size;
     };
 
+    [[nodiscard]] void* mapBuffer() const{
+        return glMapBuffer(m_renderer_id, GL_WRITE_ONLY);
+    }
+
+    void unmapBuffer(){
+        glUnmapBuffer(m_renderer_id);
+    }
+
 };
 
 

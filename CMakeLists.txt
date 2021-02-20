@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.17)
-project(openglTEST)
+project(learningOpenGL)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -8,10 +8,14 @@ set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
-add_executable(openglTEST
+add_subdirectory(lib/GLFW)
+add_subdirectory(lib/glm)
+add_subdirectory(lib/imgui)
+
+########### LIB ###########
+add_library(myopengl_lib
         lib/stb_image/stb_image.h
         lib/glad/glad.c
-        src/main.cpp
         src/renderer/Shader.cpp
         src/renderer/Shader.hpp
         src/renderer/VertexArray.h
@@ -29,20 +33,25 @@ add_executable(openglTEST
         src/renderer/Camera.hpp
         src/renderer/Mesh.hpp
         src/renderer/Meshes/Cube.hpp
-        src/ChunkGenerator.hpp
         src/Chunk.hpp
         src/Array3D.hpp)
-
-target_include_directories(openglTEST PRIVATE ${PROJECT_SOURCE_DIR}/lib)
-target_include_directories(openglTEST PRIVATE ${PROJECT_SOURCE_DIR}/src)
-target_include_directories(openglTEST PRIVATE ${PROJECT_SOURCE_DIR}/lib/glfw/include)
-
-add_subdirectory(lib/GLFW)
-add_subdirectory(lib/glm)
-add_subdirectory(lib/imgui)
-
-target_link_libraries(openglTEST
+target_include_directories(myopengl_lib PUBLIC
+        ${PROJECT_SOURCE_DIR}/lib
+        ${PROJECT_SOURCE_DIR}/src)
+target_include_directories(myopengl_lib PRIVATE
+        ${PROJECT_SOURCE_DIR}/lib/glfw/include)
+target_link_libraries(myopengl_lib
         glfw
         glm
-        imgui
-        )
+        imgui)
+
+
+########### EXE ###########
+add_executable(myopengl src/main.cpp)
+target_link_libraries(myopengl myopengl_lib)
+
+
+########### TEST ###########
+add_executable(myopengl_test test/catch.hpp test/Test1.cpp)
+target_include_directories(myopengl_test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/test)
+target_link_libraries(myopengl_test myopengl_lib)

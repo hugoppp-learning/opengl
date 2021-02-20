@@ -9,6 +9,7 @@ uniform vec4 u_ambientColor;
 uniform vec4 u_modelColor;
 uniform vec4 u_defuseColor;
 uniform vec3 u_cameraPos;
+uniform float u_shininess;
 
 void main()
 {
@@ -22,8 +23,9 @@ void main()
 
     float specularStrength = 0.5;
     vec3 viewDir = normalize(u_cameraPos - v_fragPos);
-    vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+    vec3 halfwayDir = normalize(lightDir + viewDir);
+//    vec3 reflectDir = reflect(-lightDir, norm);
+    float spec = pow(max(dot(halfwayDir, norm), 0.0), u_shininess);
     vec3 specular = specularStrength * spec * u_defuseColor.xyz;
 
     vec3 light = diffuse + u_ambientColor.xyz + specular;
