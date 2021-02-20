@@ -18,4 +18,4 @@ set(IMGUI_SOURCE_FILES
 
 add_compile_definitions(IMGUI_IMPL_OPENGL_LOADER_GLAD)
 add_library(imgui ${IMGUI_SOURCE_FILES})
-target_include_directories(imgui PRIVATE ../glfw/include ../)
+target_include_directories(imgui PRIVATE ${PROJECT_SOURCE_DIR}/lib/glfw/include ${PROJECT_SOURCE_DIR}/lib)
