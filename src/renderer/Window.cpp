@@ -19,7 +19,7 @@ Window::Window() {
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 
     glfwWindow = glfwCreateWindow(
-        800, 600, "LearnOpenGL", nullptr, nullptr);
+        1600, 1200, "LearnOpenGL", nullptr, nullptr);
     if (glfwWindow == nullptr) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
@@ -53,7 +53,7 @@ void Window::initGL() {
     glEnable(GL_BLEND);
 //    glEnable(GL_DEPTH_TEST);
     glClearColor(.2f, .2f, .2f, .2f);
-    glViewport(0, 0, 800, 600);
+    glViewport(0, 0, 1600, 1200);
 }
 
 void Window::initImGui() const {

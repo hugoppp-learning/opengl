@@ -17,7 +17,6 @@
 #include <renderer/Mesh.hpp>
 #include <renderer/Meshes/Cube.hpp>
 #include "renderer/Window.hpp"
-#include "Chunk.hpp"
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 
@@ -28,52 +27,50 @@ bool disable_mouse;
 
 void processInput(GLFWwindow *window);
 
-void drawTutorialCubes(Shader &shader, glm::vec4 modelColor, glm::vec4 ambientColor, glm::vec4 defuseColor);
+void drawTutorialCubes(Shader &shader);
 
 Camera camera(.1f);
 Window window;
 
 glm::mat4 projection = glm::perspective(glm::radians(45.0f),
-                                        800.0f / 600.0f,
+                                        1600.0f / 1200.0f,
                                         0.1f,
                                         100.0f);
 
-struct LightValues {
-    glm::vec4 clear_color;
-    glm::vec4 modelColor;
-    glm::vec4 ambientColor;
-    glm::vec4 defuseColor;
+struct LigtMaterial {
+    glm::vec3 ambient;
+    glm::vec3 diffuse;
+    glm::vec3 specular;
+};
+
+struct Material {
+    glm::vec3 clear;
+    glm::vec3 ambient;
+    glm::vec3 diffuse;
+    glm::vec3 specular;
     float shininess;
 };
 
-void DrawImGui(LightValues &lv);
+void DrawImGui(Material &m, LigtMaterial &l);
 
-LightValues lightValues = {
-    .clear_color = glm::vec4(0.189f, 0.193f, 0.201f, 1.000f),
-    .modelColor = glm::vec4(0.635f, 0.551f, 0.770f, 1.000f),
-    .ambientColor = glm::vec4(0.039f, 0.040f, 0.495f, 1.000f),
-    .defuseColor = glm::vec4(0.873f, 0.794f, 0.171f, 1.000f),
-    .shininess = 32
-};
 
 int main() {
 
     glfwSetCursorPosCallback(window.GetGLFWwindow(), mouse_callback);
     glfwSetWindowSizeCallback(window.GetGLFWwindow(), framebuffer_size_callback);
 
-    Chunk chunk;
-    std::cout << (int) chunk.at(10,10,10);
-
-
-//    glm::vec3 transl(0.45f, 0.55f, 0.60f);
-
-    std::vector<glm::vec3> cubPos(chunk.volume);
-
-    for (int x = 0; x < chunk.x_size; ++x)
-    for (int y = 0; y < chunk.y_size; ++y)
-    for (int z = 0; z < chunk.z_size; ++z) {
-        cubPos.emplace_back(x,y,z);
-    }
+    Material material = {
+        .clear = glm::vec3(0.189f, 0.193f, 0.201f),
+        .ambient = glm::vec3(0.25, 0.20725, 0.20725),
+        .diffuse = glm::vec3(1.f, 0.829, 0.829),
+        .specular = glm::vec3(0.296648, 0.296648, 0.296648),
+        .shininess = 2.8f
+    };
+    LigtMaterial light = {
+        .ambient = glm::vec3(0.160f, 0.181f, 0.265f),
+        .diffuse = glm::vec3(0.961f, 0.961f, 0.961f),
+        .specular = glm::vec3(0.961f, 0.961f, 0.961f),
+    };
 
     Cube cube;
     Shader shader = Shader("../res/colored.vert", "../res/colored.frag");
@@ -91,27 +88,24 @@ int main() {
 
         shader.SetUniform3f("u_cameraPos", camera.GetPosition());
 
-        shader.SetUniform4f("u_modelColor", lightValues.modelColor);
-        shader.SetUniform4f("u_ambientColor", lightValues.ambientColor);
-        shader.SetUniform4f("u_defuseColor", lightValues.defuseColor);
+        shader.SetUniform3f("u_material.ambient", material.ambient);
+        shader.SetUniform3f("u_material.diffuse", material.diffuse);
+        shader.SetUniform3f("u_material.specular", material.specular);
+        shader.SetUniform1f("u_material.shininess", material.shininess);
+
+        shader.SetUniform3f("u_light.ambient", light.ambient);
+        shader.SetUniform3f("u_light.diffuse", light.diffuse);
+        shader.SetUniform3f("u_light.specular", light.specular);
         shader.SetUniform3f("u_lightPos", 10.5f, 10.5f, 10.5f);
-        shader.SetUniform1f("u_shininess", lightValues.shininess);
 
-        for (auto & cubPo : cubPos) {
-            glm::mat4 model = glm::mat4(1.0f);
-            model = glm::translate(model, cubPo);
-            shader.SetUniformMatrix4f("u_m", glm::value_ptr(model));
-            cube.mesh.Draw(shader);
-        }
 
-        drawTutorialCubes(shader, lightValues.modelColor, lightValues.ambientColor, lightValues.defuseColor);
+        drawTutorialCubes(shader);
 
         int display_w, display_h;
         glfwGetFramebufferSize(window.GetGLFWwindow(), &display_w, &display_h);
-        glClearColor(lightValues.clear_color.x, lightValues.clear_color.y, lightValues.clear_color.z,
-                     lightValues.clear_color.w);
+        glClearColor(material.clear.x, material.clear.y, material.clear.z, 1);
 
-        DrawImGui(lightValues);
+        DrawImGui(material, light);
         glfwSwapBuffers(window.GetGLFWwindow());
         glfwPollEvents();
     }
@@ -119,10 +113,7 @@ int main() {
     return 0;
 }
 
-void drawTutorialCubes(Shader &shader, glm::vec4 modelColor, glm::vec4 ambientColor, glm::vec4 defuseColor) {
-    shader.SetUniform4f("u_modelColor", modelColor);
-    shader.SetUniform4f("u_ambientColor", ambientColor);
-    shader.SetUniform4f("u_defuseColor", defuseColor);
+void drawTutorialCubes(Shader &shader) {
     Cube cube;
     glm::vec3 cubePositios[] = {
         glm::vec3(0.0f, 0.0f, 0.0f),
@@ -148,27 +139,43 @@ void drawTutorialCubes(Shader &shader, glm::vec4 modelColor, glm::vec4 ambientCo
     }
 }
 
-void DrawImGui(LightValues &lv) {
+void DrawImGui(Material &m, LigtMaterial &l) {
     glfwPollEvents();
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
-    static float f = 0.0f;
-    static int counter = 0;
+    {
+        using namespace ImGui;
+        NewFrame();
+        Begin("Moin");
 
-    ImGui::Begin("Moin");
-    ImGui::ColorEdit3("clear color", (float *) &lv.clear_color);
-    ImGui::ColorEdit3("ambient color", (float *) &lv.ambientColor);
-    ImGui::ColorEdit3("model color", (float *) &lv.modelColor);
-    ImGui::ColorEdit3("defuse color", (float *) &lv.defuseColor);
-    ImGui::SliderFloat("shininess",  &lv.shininess, 1, 300);
+        static bool useAmbient = true;
+        Checkbox("use ambient as clear color", &useAmbient);
+        if (useAmbient) {
+            m.clear = l.ambient;
+        } else {
+            ColorEdit3("##1111", (float *) &m.clear);
+        }
+        Text("Model");
+        ColorEdit3("ambient color##1", (float *) &m.ambient);
+        ColorEdit3("diffuse color##1", (float *) &m.diffuse);
+        ColorEdit3("specular color##1", (float *) &m.specular);
+        SliderFloat("shininess", &m.shininess, 1, 300);
 
-    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate,
-                ImGui::GetIO().Framerate);
-    ImGui::End();
+        Separator();
 
-    ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        Text("Light");
+        ColorEdit3("ambient color##2", (float *) &l.ambient);
+        ColorEdit3("diffuse color##2", (float *) &l.diffuse);
+        ColorEdit3("specular color##2", (float *) &l.specular);
+        Separator();
+
+        Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / GetIO().Framerate,
+             GetIO().Framerate);
+        End();
+
+        Render();
+        ImGui_ImplOpenGL3_RenderDrawData(GetDrawData());
+    }
 }
 
 void mouse_callback(GLFWwindow *window, double xpos, double ypos) {

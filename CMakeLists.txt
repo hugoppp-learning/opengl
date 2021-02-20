@@ -34,7 +34,6 @@ add_library(myopengl_lib
         src/renderer/Camera.hpp
         src/renderer/Mesh.hpp
         src/renderer/Meshes/Cube.hpp
-        src/Chunk.hpp
         src/Array3D.hpp)
 target_include_directories(myopengl_lib PUBLIC
         ${PROJECT_SOURCE_DIR}/lib
