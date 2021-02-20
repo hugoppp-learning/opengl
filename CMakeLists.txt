@@ -11,6 +11,7 @@ set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(lib/GLFW)
 add_subdirectory(lib/glm)
 add_subdirectory(lib/imgui)
+add_subdirectory(test)
 
 ########### LIB ###########
 add_library(myopengl_lib
@@ -51,7 +52,3 @@ add_executable(myopengl src/main.cpp)
 target_link_libraries(myopengl myopengl_lib)
 
 
-########### TEST ###########
-add_executable(myopengl_test test/catch.hpp test/Test1.cpp)
-target_include_directories(myopengl_test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/test)
-target_link_libraries(myopengl_test myopengl_lib)
