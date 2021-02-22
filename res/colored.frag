@@ -4,7 +4,6 @@ out vec4 FragColor;
 in vec3 v_norm;
 in vec3 v_fragPos;
 
-uniform vec3 u_lightPos;
 uniform vec3 u_cameraPos;
 
 struct Material{
@@ -20,6 +19,10 @@ struct LightMaterial {
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
+    vec3 position;
+
+    float linear;
+    float quadratic;
 };
 uniform LightMaterial u_light;
 
@@ -28,10 +31,9 @@ void main()
     vec3 norm = normalize(v_norm);
 
     // DIFFUSE
-    vec3 lightDir = normalize(u_lightPos - v_fragPos);
+    vec3 lightDir = normalize(u_light.position - v_fragPos);
     float diffuseStregth = max(dot(lightDir, norm), 0.0f);
     vec3 diffuse = u_material.diffuse* (u_light.diffuse * diffuseStregth);
-
 
     // SPECULAR
     vec3 viewDir = normalize(u_cameraPos - v_fragPos);
@@ -41,8 +43,10 @@ void main()
 
     //AMBIENT
     vec3 ambient = u_material.ambient * u_light.ambient;
+    float distance = length(u_light.position - v_fragPos);
+    float attenuation = 1 / (1 + u_light.linear * distance + u_light.quadratic * distance * distance);
 
-    vec3 light = diffuse + specular + ambient;
+    vec3 light = attenuation * (diffuse + specular + ambient);
 
     FragColor = vec4(light, 1.0f);
 }

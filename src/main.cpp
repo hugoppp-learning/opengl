@@ -17,6 +17,7 @@
 #include <renderer/Mesh.hpp>
 #include <renderer/Meshes/Cube.hpp>
 #include "renderer/Window.hpp"
+#include "ChunkManager.hpp"
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 
@@ -41,6 +42,8 @@ struct LigtMaterial {
     glm::vec3 ambient;
     glm::vec3 diffuse;
     glm::vec3 specular;
+    float quadratic;
+    float linear;
 };
 
 struct Material {
@@ -70,6 +73,8 @@ int main() {
         .ambient = glm::vec3(0.160f, 0.181f, 0.265f),
         .diffuse = glm::vec3(0.961f, 0.961f, 0.961f),
         .specular = glm::vec3(0.961f, 0.961f, 0.961f),
+        .quadratic = 0.032f,
+        .linear = 0.09f,
     };
 
     Cube cube;
@@ -96,7 +101,9 @@ int main() {
         shader.SetUniform3f("u_light.ambient", light.ambient);
         shader.SetUniform3f("u_light.diffuse", light.diffuse);
         shader.SetUniform3f("u_light.specular", light.specular);
-        shader.SetUniform3f("u_lightPos", 10.5f, 10.5f, 10.5f);
+        shader.SetUniform1f("u_light.quadratic", light.quadratic);
+        shader.SetUniform1f("u_light.linear", light.linear);
+        shader.SetUniform3f("u_light.position", 10.5f, 10.5f, 10.5f);
 
 
         drawTutorialCubes(shader);
@@ -167,6 +174,8 @@ void DrawImGui(Material &m, LigtMaterial &l) {
         ColorEdit3("ambient color##2", (float *) &l.ambient);
         ColorEdit3("diffuse color##2", (float *) &l.diffuse);
         ColorEdit3("specular color##2", (float *) &l.specular);
+        InputFloat("quadratic", (float *) &l.quadratic, 0.000007, 2);
+        InputFloat("linear", (float *) &l.linear, 0.001f, 1.0f);
         Separator();
 
         Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / GetIO().Framerate,

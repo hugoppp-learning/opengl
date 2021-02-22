@@ -11,7 +11,7 @@ set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(lib/GLFW)
 add_subdirectory(lib/glm)
 add_subdirectory(lib/imgui)
-add_subdirectory(test)
+#add_subdirectory(test)
 
 ########### LIB ###########
 add_library(myopengl_lib
@@ -34,7 +34,9 @@ add_library(myopengl_lib
         src/renderer/Camera.hpp
         src/renderer/Mesh.hpp
         src/renderer/Meshes/Cube.hpp
-        src/Array3D.hpp)
+        src/Array3D.hpp
+        src/ChunkManager.hpp
+        src/Chunk.hpp)
 target_include_directories(myopengl_lib PUBLIC
         ${PROJECT_SOURCE_DIR}/lib
         ${PROJECT_SOURCE_DIR}/src)
@@ -47,7 +49,7 @@ target_link_libraries(myopengl_lib
 
 
 ########### EXE ###########
-add_executable(myopengl src/main.cpp)
+add_executable(myopengl src/main.cpp src/Face.hpp src/ChunkMeshGenerator.hpp)
 target_link_libraries(myopengl myopengl_lib)
 
 
