@@ -32,11 +32,11 @@ add_library(myopengl_lib
         src/renderer/VertexBufferLayout.cpp
         src/renderer/Camera.cpp
         src/renderer/Camera.hpp
-        src/renderer/Mesh.hpp
-        src/renderer/Meshes/Cube.hpp
         src/Array3D.hpp
         src/ChunkManager.hpp
-        src/Chunk.hpp)
+        src/Face.hpp
+        src/ChunkMeshGenerator.hpp
+        )
 target_include_directories(myopengl_lib PUBLIC
         ${PROJECT_SOURCE_DIR}/lib
         ${PROJECT_SOURCE_DIR}/src)
@@ -49,7 +49,7 @@ target_link_libraries(myopengl_lib
 
 
 ########### EXE ###########
-add_executable(myopengl src/main.cpp src/Face.hpp src/ChunkMeshGenerator.hpp)
+add_executable(myopengl src/main.cpp src/Chunk.hpp)
 target_link_libraries(myopengl myopengl_lib)
 
 

@@ -23,6 +23,13 @@ VertexBufferLayout &VertexBufferLayout::Push<unsigned int>(unsigned int count) {
     return *this;
 }
 
+template<>
+VertexBufferLayout &VertexBufferLayout::Push<unsigned char>(unsigned int count) {
+    m_attributes.push_back({GL_UNSIGNED_BYTE, count, GL_FALSE});
+    m_stride += VertexBufferLayout::getSizeOfGLType(GL_UNSIGNED_INT) * count;
+    return *this;
+}
+
 unsigned int VertexBufferLayout::getSizeOfGLType(unsigned int type) {
     switch (type) {
         case GL_FLOAT:

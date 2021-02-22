@@ -4,12 +4,11 @@
 #include <vector>
 #include "BlockType.hpp"
 #include "Array3D.hpp"
+#include "Chunk.hpp"
 
 class ChunkManager {
 private:
-    static constexpr int height = 100;
-    static constexpr int width = 16;
-
+    std::vector<Chunk> chunks;
 };
 
 
