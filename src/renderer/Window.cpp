@@ -53,7 +53,16 @@ void Window::initGL() {
     glEnable(GL_BLEND);
 //    glEnable(GL_DEPTH_TEST);
     glClearColor(.2f, .2f, .2f, .2f);
+    glfwSwapInterval(1);
     glViewport(0, 0, 1600, 1200);
+}
+
+void Window::VsyncEnable(){
+    glfwSwapInterval(1);
+}
+
+void Window::VsyncDisable(){
+    glfwSwapInterval(0);
 }
 
 void Window::initImGui() const {

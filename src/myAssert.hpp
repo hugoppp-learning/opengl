@@ -4,7 +4,7 @@
 
 #ifdef NDEBUG
 #define ASSERT(x) x
-#define ASSERT(x, msg) x
+#define ASSERT_MSG(x, msg) x
 #else
 #define ASSERT(x) if (!(x)) __debugbreak()
 #define ASSERT_MSG(x, msg) if (!(x)){ \

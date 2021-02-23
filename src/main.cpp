@@ -37,7 +37,7 @@ Window window;
 glm::mat4 projection = glm::perspective(glm::radians(45.0f),
                                         1600.0f / 1200.0f,
                                         0.1f,
-                                        100.0f);
+                                        10000.0f);
 
 int main() {
 

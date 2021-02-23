@@ -21,4 +21,7 @@ private:
 
     static void initGL() ;
 
+    void VsyncEnable();
+
+    void VsyncDisable();
 };
