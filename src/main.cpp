@@ -41,26 +41,29 @@ glm::mat4 projection = glm::perspective(glm::radians(45.0f),
 
 int main() {
 
-    Material material;
-    Chunk chunk;
-    ChunkMesh mesh(chunk);
     glfwSetCursorPosCallback(window.GetGLFWwindow(), mouse_callback);
     glfwSetWindowSizeCallback(window.GetGLFWwindow(), framebuffer_size_callback);
 
-    Shader shader = Shader("../res/block.vert", "../res/block.frag");
-    shader.Bind();
     glEnable(GL_DEPTH_TEST);
-    VertexArray vao;
-    VertexBuffer vbo(&mesh.GetData().front(), mesh.GetData().size() * sizeof(Vertex));
-    vao.AddBuffer(vbo, VertexBufferLayout().Push<float>(3));
-    vbo.Bind();
     glEnable(GL_CULL_FACE);
     glCullFace(GL_FRONT);
+
+    Shader shader = Shader("../res/block.vert", "../res/block.frag");
+    shader.Bind();
+
+    Material material;
+    Chunk chunk;
+    ChunkMesh mesh(chunk);
+    VertexArray vao;
+    VertexBuffer vbo(&mesh.GetData().front(), mesh.GetData().size() * sizeof(Triangle));
+    vao.AddBuffer(vbo, VertexBufferLayout().Push<float>(3).Push<float>(3));
+    vbo.Bind();
+
     while (!glfwWindowShouldClose(window.GetGLFWwindow())) {
         processInput(window.GetGLFWwindow());
         Renderer::Clear();
 
-        Renderer::DrawArrays(vao, shader, mesh.GetData().size() * sizeof (Vertex));
+        Renderer::DrawArrays(vao, shader, mesh.GetData().size() * sizeof (Triangle));
 
         glm::mat4 view = camera.GetViewMatrix();
         shader.SetUniformMatrix4f("u_v", glm::value_ptr(view));

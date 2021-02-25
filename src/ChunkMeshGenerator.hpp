@@ -6,16 +6,27 @@
 #include <vector>
 
 struct Vertex {
-private:
-    glm::vec3 pos1;
-    glm::vec3 pos2;
-    glm::vec3 pos3;
-public:
-    Vertex(const glm::vec3 &pos1, const glm::vec3 &pos2, const glm::vec3 &pos3) :
-        pos1(pos1),
-        pos2(pos2),
-        pos3(pos3) {}
+    glm::vec3 pos;
+    glm::vec3 normal;
 
+    explicit Vertex(const glm::vec3 &pos, const glm::vec3 &normal) : pos(pos), normal(normal) {}
+};
+
+struct Triangle {
+private:
+    Vertex pos1;
+    Vertex pos2;
+    Vertex pos3;
+public:
+    Triangle(const glm::vec3 &normal, const glm::vec3 &pos1, const glm::vec3 &pos2, const glm::vec3 &pos3) :
+        pos1(pos1, normal),
+        pos2(pos2, normal),
+        pos3(pos3, normal) {}
+
+//    Triangle(Vertex pos1, Vertex pos2, Vertex pos3) :
+//        pos1(pos1),
+//        pos2(pos2),
+//        pos3(pos3) {}
 };
 
 class ChunkMesh {
@@ -39,10 +50,10 @@ private:
          0----x     a-------b               */
 
 public:
-    std::vector<Vertex> vertecies;
+    std::vector<Triangle> tris;
 
-    [[nodiscard]] const std::vector<Vertex> &GetData() const {
-        return vertecies;
+    [[nodiscard]] const std::vector<Triangle> &GetData() const {
+        return tris;
     }
 
     explicit ChunkMesh(Chunk &chunk) {
@@ -58,57 +69,58 @@ public:
     }
 
     void AddBlock(int x, int y, int z, const BlockType &type, const Chunk &chunk) {
-        bool isXmin = x == 0;
-        bool isYmin = y == 0;
-        bool isZmin = z == 0;
-        bool isXmax = x == Chunk::x_size - 1;
-        bool isYmax = y == Chunk::y_size - 1;
-        bool isZmax = z == Chunk::z_size - 1;
         auto pos = glm::vec3(x, y, z);
 
-        if (isYmax || chunk.GetBlockType(x, y + 1, z) == BlockType::Air)
+        if (y == Chunk::y_size - 1 || chunk.GetBlockType(x, y + 1, z) == BlockType::Air)
             AddTop(pos);
-        if (isYmin || chunk.GetBlockType(x, y - 1, z) == BlockType::Air)
+        if (y == 0 || chunk.GetBlockType(x, y - 1, z) == BlockType::Air)
             AddBottom(pos);
-        if (isZmin || chunk.GetBlockType(x, y, z - 1) == BlockType::Air)
+        if (z == 0 || chunk.GetBlockType(x, y, z - 1) == BlockType::Air)
             AddFront(pos);
-        if (isZmax || chunk.GetBlockType(x, y, z + 1) == BlockType::Air)
+        if (z == Chunk::z_size - 1 || chunk.GetBlockType(x, y, z + 1) == BlockType::Air)
             AddBack(pos);
-        if (isXmin || chunk.GetBlockType(x - 1, y, z) == BlockType::Air)
+        if (x == 0 || chunk.GetBlockType(x - 1, y, z) == BlockType::Air)
             AddLeft(pos);
-        if (isXmax || chunk.GetBlockType(x + 1, y, z) == BlockType::Air)
+        if (x == Chunk::x_size - 1 || chunk.GetBlockType(x + 1, y, z) == BlockType::Air)
             AddRight(pos);
     }
 
 private:
+    static constexpr auto up = glm::vec3(0, 1, 0);
+    static constexpr auto down = glm::vec3(0, -1, 0);
+    static constexpr auto back = glm::vec3(0, 0, 1);
+    static constexpr auto front = glm::vec3(0, 0, -1);
+    static constexpr auto right = glm::vec3(1, 0, 0);
+    static constexpr auto left = glm::vec3(-1, 0, 0);
+
     inline void AddRight(const glm::vec3 &pos) {
-        vertecies.emplace_back(b + pos, f + pos, c + pos);
-        vertecies.emplace_back(g + pos, c + pos, f + pos);
+        tris.emplace_back(right, b + pos, f + pos, c + pos);
+        tris.emplace_back(right, g + pos, c + pos, f + pos);
     }
 
     inline void AddLeft(const glm::vec3 &pos) {
-        vertecies.emplace_back(a + pos, d + pos, e + pos);
-        vertecies.emplace_back(h + pos, e + pos, d + pos);
+        tris.emplace_back(left, a + pos, d + pos, e + pos);
+        tris.emplace_back(left, h + pos, e + pos, d + pos);
     }
 
     inline void AddBack(const glm::vec3 &pos) {
-        vertecies.emplace_back(e + pos, h + pos, f + pos);
-        vertecies.emplace_back(g + pos, f + pos, h + pos);
+        tris.emplace_back(back, e + pos, h + pos, f + pos);
+        tris.emplace_back(back, g + pos, f + pos, h + pos);
     }
 
     inline void AddFront(const glm::vec3 &pos) {
-        vertecies.emplace_back(a + pos, b + pos, d + pos);
-        vertecies.emplace_back(b + pos, c + pos, d + pos);
+        tris.emplace_back(front, a + pos, b + pos, d + pos);
+        tris.emplace_back(front, b + pos, c + pos, d + pos);
     }
 
     inline void AddBottom(const glm::vec3 &pos) {
-        vertecies.emplace_back(e + pos, b + pos, a + pos);
-        vertecies.emplace_back(f + pos, b + pos, e + pos);
+        tris.emplace_back(down, e + pos, b + pos, a + pos);
+        tris.emplace_back(down, f + pos, b + pos, e + pos);
     }
 
     inline void AddTop(const glm::vec3 &pos) {
-        vertecies.emplace_back(d + pos, c + pos, h + pos);
-        vertecies.emplace_back(g + pos, h + pos, c + pos);
+        tris.emplace_back(up, d + pos, c + pos, h + pos);
+        tris.emplace_back(up, g + pos, h + pos, c + pos);
     };
 private:
 };

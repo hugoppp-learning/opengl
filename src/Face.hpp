@@ -10,7 +10,7 @@ enum class Directioin {
     East,
 };
 
-class Vertex {
+class Triangle {
     float[6] coords;
 
 
