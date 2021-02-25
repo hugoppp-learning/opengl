@@ -26,7 +26,14 @@ VertexBufferLayout &VertexBufferLayout::Push<unsigned int>(unsigned int count) {
 template<>
 VertexBufferLayout &VertexBufferLayout::Push<unsigned char>(unsigned int count) {
     m_attributes.push_back({GL_UNSIGNED_BYTE, count, GL_FALSE});
-    m_stride += VertexBufferLayout::getSizeOfGLType(GL_UNSIGNED_INT) * count;
+    m_stride += VertexBufferLayout::getSizeOfGLType(GL_UNSIGNED_BYTE) * count;
+    return *this;
+}
+
+template<>
+VertexBufferLayout &VertexBufferLayout::Push<char>(unsigned int count) {
+    m_attributes.push_back({GL_BYTE, count, GL_FALSE});
+    m_stride += VertexBufferLayout::getSizeOfGLType(GL_BYTE) * count;
     return *this;
 }
 
@@ -40,8 +47,9 @@ unsigned int VertexBufferLayout::getSizeOfGLType(unsigned int type) {
             return sizeof(GLint);
         case GL_BYTE:
             return sizeof(GLbyte);
+        case GL_UNSIGNED_BYTE:
+            return sizeof(GLubyte);
         default:
-            return 0;
+            ASSERT_MSG(false, "size of gl type not definied");
     }
-    ASSERT(false);
 }

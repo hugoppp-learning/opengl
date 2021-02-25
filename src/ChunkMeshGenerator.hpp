@@ -7,7 +7,7 @@
 
 struct Vertex {
     glm::vec3 pos;
-    glm::vec3 normal;
+    glm::vec<3, unsigned char, glm::defaultp> normal;
 
     explicit Vertex(const glm::vec3 &pos, const glm::vec3 &normal) : pos(pos), normal(normal) {}
 };
@@ -86,41 +86,41 @@ public:
     }
 
 private:
-    static constexpr auto up = glm::vec3(0, 1, 0);
-    static constexpr auto down = glm::vec3(0, -1, 0);
-    static constexpr auto back = glm::vec3(0, 0, 1);
-    static constexpr auto front = glm::vec3(0, 0, -1);
-    static constexpr auto right = glm::vec3(1, 0, 0);
-    static constexpr auto left = glm::vec3(-1, 0, 0);
+    static constexpr auto up = glm::vec<3, unsigned char, glm::defaultp>(0, 1, 0);
+    static constexpr auto down = glm::vec<3, unsigned char, glm::defaultp>(0, -1, 0);
+    static constexpr auto back = glm::vec<3, unsigned char, glm::defaultp>(0, 0, 1);
+    static constexpr auto front = glm::vec<3, unsigned char, glm::defaultp>(0, 0, -1);
+    static constexpr auto right = glm::vec<3, unsigned char, glm::defaultp>(1, 0, 0);
+    static constexpr auto left = glm::vec<3, unsigned char, glm::defaultp>(-1, 0, 0);
 
     inline void AddRight(const glm::vec3 &pos) {
-        tris.emplace_back(right, b + pos, f + pos, c + pos);
-        tris.emplace_back(right, g + pos, c + pos, f + pos);
+        tris.emplace_back(Triangle(right, b + pos, f + pos, c + pos));
+        tris.emplace_back(Triangle(right, g + pos, c + pos, f + pos));
     }
 
     inline void AddLeft(const glm::vec3 &pos) {
-        tris.emplace_back(left, a + pos, d + pos, e + pos);
-        tris.emplace_back(left, h + pos, e + pos, d + pos);
+        tris.emplace_back(Triangle(left, a + pos, d + pos, e + pos));
+        tris.emplace_back(Triangle(left, h + pos, e + pos, d + pos));
     }
 
     inline void AddBack(const glm::vec3 &pos) {
-        tris.emplace_back(back, e + pos, h + pos, f + pos);
-        tris.emplace_back(back, g + pos, f + pos, h + pos);
+        tris.emplace_back(Triangle(back, e + pos, h + pos, f + pos));
+        tris.emplace_back(Triangle(back, g + pos, f + pos, h + pos));
     }
 
     inline void AddFront(const glm::vec3 &pos) {
-        tris.emplace_back(front, a + pos, b + pos, d + pos);
-        tris.emplace_back(front, b + pos, c + pos, d + pos);
+        tris.emplace_back(Triangle(front, a + pos, b + pos, d + pos));
+        tris.emplace_back(Triangle(front, b + pos, c + pos, d + pos));
     }
 
     inline void AddBottom(const glm::vec3 &pos) {
-        tris.emplace_back(down, e + pos, b + pos, a + pos);
-        tris.emplace_back(down, f + pos, b + pos, e + pos);
+        tris.emplace_back(Triangle(down, e + pos, b + pos, a + pos));
+        tris.emplace_back(Triangle(down, f + pos, b + pos, e + pos));
     }
 
     inline void AddTop(const glm::vec3 &pos) {
-        tris.emplace_back(up, d + pos, c + pos, h + pos);
-        tris.emplace_back(up, g + pos, h + pos, c + pos);
+        tris.emplace_back(Triangle(up, d + pos, c + pos, h + pos));
+        tris.emplace_back(Triangle(up, g + pos, h + pos, c + pos));
     };
 private:
 };

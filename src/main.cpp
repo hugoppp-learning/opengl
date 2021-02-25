@@ -56,7 +56,7 @@ int main() {
     ChunkMesh mesh(chunk);
     VertexArray vao;
     VertexBuffer vbo(&mesh.GetData().front(), mesh.GetData().size() * sizeof(Triangle));
-    vao.AddBuffer(vbo, VertexBufferLayout().Push<float>(3).Push<float>(3));
+    vao.AddBuffer(vbo, VertexBufferLayout().Push<float>(3).Push<char>(3).Push<char>(1));
     vbo.Bind();
 
     while (!glfwWindowShouldClose(window.GetGLFWwindow())) {
